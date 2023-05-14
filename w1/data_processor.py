@@ -80,4 +80,28 @@ class DataProcessor:
         """
         ######################################## YOUR CODE HERE ##################################################
 
+       # get generator from data_reader
+        #data_reader_gen = (row for row in self.data_reader)
+        #or use the following
+         
+        # skip first row as it is the column name
+        data_reader_gen = iter(self.data_reader)
+
+        # skip header
+        _ = next(data_reader_gen)
+
+        # initialize aggregate to zero 
+        aggregate = 0
+
+        # update aggregate as we loop through generator
+        for row in tqdm(data_reader_gen, 'ROWS: '):
+            val = self.to_float(row[column_name]) 
+            if isinstance(val, float):
+                aggregate += val
+            else: continue
+
+        rounded_sum = round(aggregate, 2)
+        pprint(column_name)
+        pprint(f'Total Sum: {rounded_sum}')
+        return rounded_sum
         ######################################## YOUR CODE HERE ##################################################

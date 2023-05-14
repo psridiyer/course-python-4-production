@@ -8,12 +8,12 @@ import argparse
 from global_utils import get_file_name, make_dir, plot_sales_data
 from datetime import datetime
 import json
-
+from collections import defaultdict
 
 CURRENT_FOLDER_NAME = os.path.dirname(os.path.abspath(__file__))
 
 
-def revenue_per_region(dp: DataProcessor) -> Dict:
+def revenue_per_region(dp: DataProcessor, col_name: str='TotalPrice') -> Dict:
     """
     Input : object of instance type Class DataProcessor
     Output : Dict
@@ -44,7 +44,25 @@ def revenue_per_region(dp: DataProcessor) -> Dict:
     }
     """
     ######################################## YOUR CODE HERE ##################################################
+    data_reader_gen = (row for row in dp.data_reader)
 
+    # skip first row as - column name
+    _ = next(data_reader_gen)
+
+    # initialize regional dictionary 
+    rev_per_region = defaultdict(float)
+
+    # update aggregate as we loop through generator
+    for row in tqdm(data_reader_gen, 'ROWS: '):
+        try:
+            value = float(row[col_name])
+        except ValueError:
+            print('Column provided is not numeric value, check the input values')
+            return
+        country = row['Country']
+        rev_per_region[country] += value
+
+    return dict(rev_per_region)
     ######################################## YOUR CODE HERE ##################################################
 
 
