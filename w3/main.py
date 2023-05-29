@@ -165,6 +165,9 @@ def main() -> List[Dict]:
 
     ######################################## YOUR CODE HERE ##################################################
 
+    with multiprocessing.Pool(processes=n_processes) as pool:
+        results = pool.starmap(run, [(batch, idx) for idx, batch in enumerate(batches)])
+        
     ######################################## YOUR CODE HERE ##################################################
 
     en = time.time()
